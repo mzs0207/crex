@@ -3,11 +3,12 @@ package bybit
 import (
 	"errors"
 	"fmt"
-	. "github.com/coinrust/crex"
-	"github.com/frankrap/bybit-api/rest"
 	"log"
 	"strings"
 	"time"
+
+	. "github.com/coinrust/crex"
+	"github.com/frankrap/bybit-api/rest"
 )
 
 // Bybit the Bybit exchange
@@ -317,6 +318,9 @@ func (b *Bybit) GetPositions(symbol string) (result []*Position, err error) {
 	ret, err = b.client.GetPosition(symbol)
 	if err != nil {
 		return
+	}
+	if ret.Side == "Sell" {
+		ret.Size = ret.Size * -1.0
 	}
 	result = []*Position{
 		{
